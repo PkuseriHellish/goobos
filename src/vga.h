@@ -38,3 +38,4 @@
 void initVGA();
 void clear(uint8_t color);
 void drawpx(int x,int y, uint8_t color);
+uint8_t getpx(int x, int y);

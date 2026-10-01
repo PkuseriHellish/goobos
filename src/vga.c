@@ -1,10 +1,9 @@
 #include <stddef.h>
 #include <stdint.h>
-#include "serial.h"
+#include "x86.h"
 #include "vga.h"
 #include <stddef.h>
 #include <stdint.h>
-#include "serial.h"
 #include "vga.h"
 
 /*
@@ -237,4 +236,8 @@ void clear(uint8_t color)
 void drawpx(int x,int y, uint8_t color)
 {
     vram[y * 320 + x] = color;
+}
+uint8_t getpx(int x, int y)
+{
+    return vram[y * 320 + x];
 }

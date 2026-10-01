@@ -18,6 +18,9 @@ cp build/kernel.bin build/iso/boot/kernel.bin
 
 cp src/misc/grub.cfg build/iso/boot/grub/grub.cfg
 
+
+cp readme.md build/iso/test.txt
+
 grub2-mkrescue -o goobos.img build/iso
 
 qemu-system-i386 -drive format=raw,file=goobos.img -serial stdio

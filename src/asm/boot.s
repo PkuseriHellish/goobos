@@ -1,21 +1,28 @@
-BITS 32 ; We are switching to protected mode after booting from the disk
-
-; There exists a standard for loading various x86 kernels using a bootloader called Multiboot specification
+BITS 32
 
 SECTION .text
-    align   4
-    dd      0x1BADB002          ; This magic number value is used to indentify the header
-    dd      0x00                ; Flags
-    dd      - (0x1BADB002+0x00) ; Checksum value should be 0 when magic number is added to the flags
+
+align 4
+
+    dd 0x1BADB002
+    dd 0x00
+    dd -(0x1BADB002 + 0x00)
 
 GLOBAL start
-EXTERN kmain      ; We are declaring kernel_main as an external function
+
+EXTERN kmain
+EXTERN multiboot_magic
+EXTERN multiboot_info_addr
 
 start:
-    cli                 ; Clear interrupts
-    call kmain    ; We are calling kernel_main() from the kernel.c file
-    jmp end             ; We jump to the end after the function has been called
+    cli
+
+    ; Save Multiboot values into shared globals.
+    mov [multiboot_magic], eax
+    mov [multiboot_info_addr], ebx
+
+    call kmain
 
 end:
-    hlt                 ; Halt execution
-    jmp end             ; Jump back to end label
+    hlt
+    jmp end

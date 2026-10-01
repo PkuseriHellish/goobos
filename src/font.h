@@ -1,21 +1,37 @@
 #ifndef FONT_H
 #define FONT_H
 
-
-#include <stddef.h>
 #include <stdint.h>
-#define font_width(_s) (strlen((_s)) * 8)
-#define font_height() (8)
-#define font_str_doubled(_s, _x, _y, _c) do {\
-        const char *__s = (_s);\
-        __typeof__(_x) __x = (_x);\
-        __typeof__(_y) __y = (_y);\
-        __typeof__(_c) __c = (_c);\
-        font_str(__s, __x + 1, __y + 1, COLOR_ADD(__c, -2));\
-        font_str(__s, __x, __y, __c);\
-    } while (0);
+#include <stddef.h>
 
-void font_char(char c, size_t x, size_t y, uint8_t color);
-void font_str(const char *s, size_t x, size_t y, uint8_t color);
+typedef struct {
+    uint32_t codepoint;
+
+    uint8_t width;
+    uint8_t height;
+
+    int8_t x_offset;
+    int8_t y_offset;
+
+    uint8_t advance;
+
+    const uint8_t *bitmap;
+} font_glyph_t;
+
+const font_glyph_t *font_get_glyph(uint32_t codepoint);
+
+void font_char(
+    uint32_t codepoint,
+    int x,
+    int y,
+    uint8_t color
+);
+
+void font_str(
+    const char *str,
+    int x,
+    int y,
+    uint8_t color
+);
 
 #endif
