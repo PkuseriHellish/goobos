@@ -11,15 +11,9 @@ align 4
 GLOBAL start
 
 EXTERN kmain
-EXTERN multiboot_magic
-EXTERN multiboot_info_addr
 
 start:
     cli
-
-    ; Save Multiboot values into shared globals.
-    mov [multiboot_magic], eax
-    mov [multiboot_info_addr], ebx
 
     call kmain
 
