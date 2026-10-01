@@ -33,11 +33,11 @@ static int input_length = 0;
 static void
 erase_char(int x, int y)
 {
-    for (int yy = 0; yy < FONT_HEIGHT; yy++) {
+    for (int yy = 0; yy < FONT_HEIGHT+4; yy++) {
         for (int xx = 0; xx < FONT_WIDTH; xx++) {
             drawpx(
                 x + xx,
-                y + yy,
+                y + yy - 4,
                 BG_COLOR
             );
         }
