@@ -3,3 +3,4 @@ build
 goobos.iso
 goobos.img
 compile_commands.json
+log.txt

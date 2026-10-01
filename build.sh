@@ -1,17 +1,28 @@
+#!/bin/bash
+set -e
+
 rm -rf build goobos.iso goobos.img
 mkdir -p build/iso/boot/grub
 
+CFLAGS="-m32 -O2 -ffreestanding -nostdlib -static -no-pie"
+
+
 nasm -f elf32 src/asm/boot.s -o build/boot.o
+
 python3 mkarchive.py src/rootfs build/archive.sfs
 xxd -i build/archive.sfs > build/sfs.c
 
- gcc -m32 -ffreestanding -nostdlib -static -no-pie \
-        -c build/sfs.c \
-        -o "build/sfs.o"
+gcc $CFLAGS \
+    -c build/sfs.c \
+    -o build/sfs.o
+
+
 for file in src/*.c; do
-    gcc -m32 -ffreestanding -nostdlib -static -no-pie \
+    name=$(basename "$file" .c)
+
+    gcc $CFLAGS \
         -c "$file" \
-        -o "build/$(basename "$file" .c).o"
+        -o "build/$name.o"
 done
 
 ld -m elf_i386 \
@@ -21,7 +32,14 @@ ld -m elf_i386 \
 
 cp build/kernel.bin build/iso/boot/kernel.bin
 cp src/misc/grub.cfg build/iso/boot/grub/grub.cfg
-grub2-mkrescue -o goobos.img build/iso
 
-qemu-system-i386 -drive format=raw,file=goobos.img -serial stdio -audiodev driver=sdl,id=audio0 -machine pcspk-audiodev=audio0 -m 64M 
-# qemu-system-x86_64 -kernel build/kernel.bin
+grub2-mkrescue \
+    -o goobos.img \
+    build/iso
+
+qemu-system-i386 \
+    -drive format=raw,file=goobos.img \
+    -serial stdio \
+    -audiodev driver=sdl,id=audio0 \
+    -machine pcspk-audiodev=audio0 \
+    -m 64M

@@ -61,7 +61,7 @@ static int starts_with(const char *str, const char *prefix)
 
 static void shell_prompt(void)
 {
-    terminal_print("] ", COLOR_YELLOW);
+    terminal_print("$ ", COLOR_YELLOW);
 }
 
 
@@ -164,7 +164,6 @@ static void command_cat(const char *name)
 
     terminal_newline();
 }
-
 
 /* --------------------------------------------------------------------------
  * touch
@@ -401,7 +400,6 @@ static void shell_execute(char *cmd)
         command_write(cmd + 6);
         return;
     }
-
 
     /*
      * echo <text>
